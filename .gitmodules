@@ -1,0 +1,3 @@
+[submodule "Documentation/os/_themes/alabaster"]
+	path = Documentation/os/_themes/alabaster
+	url = https://github.com/bitprophet/alabaster.git
