@@ -57,7 +57,7 @@ However, if we try to build the same program with our cross compilers we get
 .. code-block:: console
    :linenos:
 
-   # /opt/cross-i686/bin/i686-elf-gcc main.c
+   # i686-elf-gcc main.c
    main.c:1:19: fatal error: stdio.h: No such file or directory
    #include <stdio.h>
                      ^
@@ -83,8 +83,8 @@ If we try to compile this, we get
 .. code-block:: console
    :linenos:
 
-   # /opt/cross-i686/bin/i686-elf-gcc main.c -nostdlib -ffreestanding
-   /opt/cross-i686/lib/gcc/i686-elf/4.9.3/../../../../i686-elf/bin/ld: warning: cannot find entry symbol _start; defaulting to 08048054
+   # i686-elf-gcc main.c -nostdlib -ffreestanding
+   ld: warning: cannot find entry symbol _start; defaulting to 08048054
 
 This says that we do not have a C runtime either. Since our cross compiler is
 built without targeting a specific OS, it does not know which loader will be

@@ -232,7 +232,7 @@ When I used this tool, I got an error message that it could not locate xorriso
 .. code-block:: console
    :linenos:
 
-   /usr/bin/grub-mkrescue: 323: xorriso: not found
+   grub-mkrescue: 323: xorriso: not found
    
 so i had to install the xorriso library. Then xorriso complained that it 
 could not find the efi.img file
