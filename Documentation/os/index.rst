@@ -27,8 +27,7 @@ Operating System
 .. only:: html
 
           This documentation is available in :download:`PDF <_build/latex/os.pdf>`
-          for offline access. The source is available on 
-          `GitHub <https://github.com/ghdk/os>`_.
+          for offline access.
 
 .. toctree::
    :maxdepth: 2

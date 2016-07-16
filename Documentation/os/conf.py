@@ -104,7 +104,15 @@ html_theme = 'alabaster'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {}
+html_theme_options = {
+    'github_user': 'ghdk',
+    'github_repo': 'os',
+    'github_button': True,
+    'github_banner': True,
+    'sidebar_width': '240pt',
+    'page_width': '100%',
+    'pre_bg': '#FFFFFF'
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = ['_themes/alabaster']
