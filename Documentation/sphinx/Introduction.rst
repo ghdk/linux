@@ -24,54 +24,30 @@
 .. _JamesM's kernel development tutorials: http://www.jamesmolloy.co.uk/tutorial_html/
 .. _Pedigree: https://pedigree-project.org
 .. _OSDev/Tutorials: http://wiki.osdev.org/Tutorials
+.. _GitHub Pages: https://ghdk.github.io/os/
+.. _GitHub: https://github.com/ghdk/os
 
 ============
 Introduction
 ============
 
-Features
-========
+Operating system is a fork of the Linux kernel version 3.19. The aim of this
+project is to study computer architecture and provide documentation that
+covers the areas of study. Such a study requires a kernel. At first I started
+writing my own kernel, but soon I found myself using snippets from my own
+code in the documentation. In order to bring greater value to the reader, I
+decided to use instead the code base of a kernel with real world application.
+Hence, this fork was born.
 
-+------------------------------+----------+
-| Feature                      | Comments |
-+==============================+==========+
-| Boot                         | Pending  |
-+------------------------------+----------+
-| Framebuffer                  | Pending  |
-+------------------------------+----------+
-| VESA                         | Pending  |
-+------------------------------+----------+
-| Descriptor tables (GDT, IDT) | Pending  |
-+------------------------------+----------+
-| IRQs                         | Pending  |
-+------------------------------+----------+
-| Paging                       | Pending  |
-+------------------------------+----------+
-| Heap                         | Pending  |
-+------------------------------+----------+
-| Virtual filesystem (VFS)     | Pending  |
-+------------------------------+----------+
-| Initial ramdisk (initrd)     | Pending  |
-+------------------------------+----------+
-| Filesystem (FS)              | Pending  |
-+------------------------------+----------+
-| SATA                         | Pending  |
-+------------------------------+----------+
-| RAID                         | Pending  |
-+------------------------------+----------+
-| Multitasking                 | Pending  |
-+------------------------------+----------+
-| User Mode                    | Pending  |
-+------------------------------+----------+
-| POSIX                        | Pending  |
-+------------------------------+----------+
+.. only:: html
 
-Resources
-=========
+   For offline access to this material you can download the
+   :download:`PDF <_build/latex/os.pdf>` version. The repository of this
+   project is hosted on `GitHub`_.
 
-- `Bran's kernel development tutorials`_
-- `JamesM's kernel development tutorials`_
-- `OSDev/Tutorials`_
-- `Pedigree`_
+.. only:: latex
+
+   The latest version of this document is available on `GitHub Pages`_. The
+   repository of this project is hosted on `GitHub`_.
 
 .. eof

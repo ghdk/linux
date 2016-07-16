@@ -200,13 +200,6 @@ latex_elements = {
 # Additional stuff for the LaTeX preamble.
 'preamble': '',
 
-'tableofcontents': """
-The latest version of this document is available
-at \url{http://ghdk.github.io/os/}. The source is 
-available at \url{https://github.com/ghdk/os}.
-
-\\tableofcontents""",
-
 'classoptions': ',openany,oneside',
 'babel': '\\usepackage[english]{babel}',
 'releasename': '' 
