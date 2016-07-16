@@ -25,95 +25,35 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="None" href="index.html#document-index" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body>  
+  <body>
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="operating-system">
 <h1>Operating System<a class="headerlink" href="#operating-system" title="Permalink to this headline">¶</a></h1>
-<p>This documentation is available in <a class="reference download internal" href="_downloads/os.pdf"><tt class="xref download docutils literal"><span class="pre">PDF</span></tt></a>
-for offline access. The source is available on
-<a class="reference external" href="https://github.com/ghdk/os">GitHub</a>.</p>
 <div class="toctree-wrapper compound">
 <span id="document-Introduction"></span><div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="features">
-<h3>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="docutils">
-<colgroup>
-<col width="75%" />
-<col width="25%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Feature</th>
-<th class="head">Comments</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>Boot</td>
-<td>Pending</td>
-</tr>
-<tr class="row-odd"><td>Framebuffer</td>
-<td>Pending</td>
-</tr>
-<tr class="row-even"><td>VESA</td>
-<td>Pending</td>
-</tr>
-<tr class="row-odd"><td>Descriptor tables (GDT, IDT)</td>
-<td>Pending</td>
-</tr>
-<tr class="row-even"><td>IRQs</td>
-<td>Pending</td>
-</tr>
-<tr class="row-odd"><td>Paging</td>
-<td>Pending</td>
-</tr>
-<tr class="row-even"><td>Heap</td>
-<td>Pending</td>
-</tr>
-<tr class="row-odd"><td>Virtual filesystem (VFS)</td>
-<td>Pending</td>
-</tr>
-<tr class="row-even"><td>Initial ramdisk (initrd)</td>
-<td>Pending</td>
-</tr>
-<tr class="row-odd"><td>Filesystem (FS)</td>
-<td>Pending</td>
-</tr>
-<tr class="row-even"><td>SATA</td>
-<td>Pending</td>
-</tr>
-<tr class="row-odd"><td>RAID</td>
-<td>Pending</td>
-</tr>
-<tr class="row-even"><td>Multitasking</td>
-<td>Pending</td>
-</tr>
-<tr class="row-odd"><td>User Mode</td>
-<td>Pending</td>
-</tr>
-<tr class="row-even"><td>POSIX</td>
-<td>Pending</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section" id="resources">
-<h3>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><a class="reference external" href="http://www.osdever.net/bkerndev/index.php">Bran&#8217;s kernel development tutorials</a></li>
-<li><a class="reference external" href="http://www.jamesmolloy.co.uk/tutorial_html/">JamesM&#8217;s kernel development tutorials</a></li>
-<li><a class="reference external" href="http://wiki.osdev.org/Tutorials">OSDev/Tutorials</a></li>
-<li><a class="reference external" href="https://pedigree-project.org">Pedigree</a></li>
-</ul>
-</div>
+<p>Operating system is a fork of the Linux kernel version 3.19. The aim of this
+project is to study computer architecture and provide documentation that
+covers the areas of study. Such a study requires a kernel. At first I started
+writing my own kernel, but soon I found myself using snippets from my own
+code in the documentation. In order to bring greater value to the reader, I
+decided to use instead the code base of a kernel with real world application.
+Hence, this fork was born.</p>
+<p>For offline access to this material you can download the
+<a class="reference download internal" href="_downloads/os.pdf"><tt class="xref download docutils literal"><span class="pre">PDF</span></tt></a> version. The repository of this
+project is hosted on <a class="reference external" href="https://github.com/ghdk/os">GitHub</a>.</p>
 </div>
 <span id="document-Toolchain"></span><div class="section" id="toolchain">
 <h2>Toolchain<a class="headerlink" href="#toolchain" title="Permalink to this headline">¶</a></h2>
@@ -134,8 +74,8 @@ pages.</p>
 5</pre></div></td><td class="code"><div class="highlight"><pre><span class="go">~ # export TARGET=i686-elf</span>
 
 <span class="go">~ # mkdir -p ${HOME}/Applications/cross-i686/bin</span>
-<span class="go">~ # export PREFIX=&quot;$HOME/Applications/cross-i686&quot;</span>
-<span class="go">~ # export PATH=&quot;$PREFIX/bin:$PATH&quot;</span>
+<span class="go">~ # export PREFIX=&quot;${HOME}/Applications/cross-i686&quot;</span>
+<span class="go">~ # export PATH=&quot;${PREFIX}/bin:${PATH}&quot;</span>
 </pre></div>
 </td></tr></table></div>
 <p>Before building GCC, I built binutils
@@ -150,7 +90,7 @@ pages.</p>
  8
  9
 10</pre></div></td><td class="code"><div class="highlight"><pre><span class="go">~ # wget http://ftp.gnu.org/gnu/binutils/binutils-2.26.tar.bz2</span>
-<span class="go">~ # tar xvfz binutils-2.26.tar.bz2</span>
+<span class="go">~ # tar xvfj binutils-2.26.tar.bz2</span>
 <span class="go">~ # mkdir binutils-2.26-build</span>
 <span class="go">~ # cd binutils-2.26-build</span>
 <span class="go">binutils-2.26-build # ../binutils-2.26/configure --target=${TARGET}</span>
@@ -178,7 +118,84 @@ and the ISL library</p>
 <div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="go">gcc-4.9.3 # ./contrib/download_prerequisites</span>
 </pre></div>
 </td></tr></table></div>
-<p>and finally I compiled GCC</p>
+<p>However, the script that came with GCC did not work for me. This is the patch
+i applied:</p>
+<div class="highlight-diff"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre></div></td><td class="code"><div class="highlight"><pre><span class="gd">--- contrib/download_prerequisites   2014-02-13 14:06:48.000000000 +0000</span>
+<span class="gi">+++ download_prerequisites   2016-07-02 14:25:57.444427985 +0100</span>
+<span class="gu">@@ -29,15 +29,17 @@</span>
+ GMP=gmp-4.3.2
+ MPC=mpc-0.8.1
+
+<span class="gd">-wget ftp://gcc.gnu.org/pub/gcc/infrastructure/$MPFR.tar.bz2 || exit 1</span>
+<span class="gi">+URL=&#39;http://ftp.vim.org/languages/gcc/infrastructure&#39;</span>
+<span class="gi">+</span>
+<span class="gi">+wget ${URL}/$MPFR.tar.bz2 || exit 1</span>
+ tar xjf $MPFR.tar.bz2 || exit 1
+ ln -sf $MPFR mpfr || exit 1
+
+<span class="gd">-wget ftp://gcc.gnu.org/pub/gcc/infrastructure/$GMP.tar.bz2 || exit 1</span>
+<span class="gi">+wget ${URL}/$GMP.tar.bz2 || exit 1</span>
+ tar xjf $GMP.tar.bz2  || exit 1
+ ln -sf $GMP gmp || exit 1
+
+<span class="gd">-wget ftp://gcc.gnu.org/pub/gcc/infrastructure/$MPC.tar.gz || exit 1</span>
+<span class="gi">+wget ${URL}/$MPC.tar.gz || exit 1</span>
+ tar xzf $MPC.tar.gz || exit 1
+ ln -sf $MPC mpc || exit 1
+
+<span class="gu">@@ -46,11 +48,11 @@</span>
+   ISL=isl-0.12.2
+   CLOOG=cloog-0.18.1
+
+<span class="gd">-  wget ftp://gcc.gnu.org/pub/gcc/infrastructure/$ISL.tar.bz2 || exit 1</span>
+<span class="gi">+  wget ${URL}/$ISL.tar.bz2 || exit 1</span>
+   tar xjf $ISL.tar.bz2  || exit 1
+   ln -sf $ISL isl || exit 1
+
+<span class="gd">-  wget ftp://gcc.gnu.org/pub/gcc/infrastructure/$CLOOG.tar.gz || exit 1</span>
+<span class="gi">+  wget ${URL}/$CLOOG.tar.gz || exit 1</span>
+   tar xzf $CLOOG.tar.gz || exit 1
+   ln -sf $CLOOG cloog || exit 1
+ fi
+</pre></div>
+</td></tr></table></div>
+<p>Finally I compiled GCC</p>
 <div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -348,7 +365,7 @@ at address 0x0010200b:</p>
 <p>We can set a breakpoint in the VirtualBox console to break the execution at our
 main function:</p>
 <div class="highlight-text"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="highlight"><pre>VBoxDbg&gt; br 0010200b 1 &#39;echo main
+2</pre></div></td><td class="code"><div class="highlight"><pre>VBoxDbg&gt; br 0010200b 1 &#39;echo main&#39;
 Set REM breakpoint 4 at 000000000010200b
 </pre></div>
 </td></tr></table></div>
@@ -455,7 +472,7 @@ cs=0010 ds=0018 es=0018 fs=0018 gs=0018 ss=0018               eflags=00000006
 2
 3
 4
-5</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> /opt/cross-i686/bin/i686-elf-gcc main.c
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> i686-elf-gcc main.c
 <span class="go">main.c:1:19: fatal error: stdio.h: No such file or directory</span>
 <span class="gp">#</span>include &lt;stdio.h&gt;
 <span class="go">                  ^</span>
@@ -478,8 +495,8 @@ cross compiler.</p>
 </td></tr></table></div>
 <p>If we try to compile this, we get</p>
 <div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> /opt/cross-i686/bin/i686-elf-gcc main.c -nostdlib -ffreestanding
-<span class="go">/opt/cross-i686/lib/gcc/i686-elf/4.9.3/../../../../i686-elf/bin/ld: warning: cannot find entry symbol _start; defaulting to 08048054</span>
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> i686-elf-gcc main.c -nostdlib -ffreestanding
+<span class="go">ld: warning: cannot find entry symbol _start; defaulting to 08048054</span>
 </pre></div>
 </td></tr></table></div>
 <p>This says that we do not have a C runtime either. Since our cross compiler is
@@ -2070,7 +2087,7 @@ tool we will be using to make the ISO images is grub-mkrescue</p>
 </pre></div>
 </td></tr></table></div>
 <p>When I used this tool, I got an error message that it could not locate xorriso</p>
-<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="go">/usr/bin/grub-mkrescue: 323: xorriso: not found</span>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="go">grub-mkrescue: 323: xorriso: not found</span>
 </pre></div>
 </td></tr></table></div>
 <p>so i had to install the xorriso library. Then xorriso complained that it
@@ -2131,11 +2148,7 @@ command:</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html#document-index">Table Of Contents</a></h3>
   <ul>
-<li class="toctree-l1"><a class="reference internal" href="index.html#document-Introduction">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="index.html#features">Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#resources">Resources</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-Introduction">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-Toolchain">Toolchain</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="index.html#building-a-cross-compiler">Building a cross-compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#building-grub">Building GRUB</a></li>
@@ -2180,6 +2193,10 @@ command:</p>
       
     </div>
 
+    
+    <a href="https://github.com/ghdk/os" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
     
 
     
