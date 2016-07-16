@@ -1,3 +1,15 @@
+WHAT IS OPERATING SYSTEM?
+
+  Operating system is a fork of the Linux kernel version 3.19. The aim of this
+  project is to study computer architecture and provide documentation that
+  covers the areas of study. Such a study requires a kernel. At first I started
+  writing my own kernel, but soon I found myself using snippets from my own
+  code in the documentation. In order to bring greater value to the reader, I
+  decided to use instead the code base of a kernel with real world application.
+  Hence, this fork was born.
+
+  The following is the README of the Linux 3.x series:
+
         Linux kernel release 3.x <http://kernel.org/>
 
 These are the release notes for Linux version 3.  Read them carefully,
