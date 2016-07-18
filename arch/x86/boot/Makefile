@@ -158,8 +158,15 @@ isoimage: $(obj)/bzImage
 	-rm -rf $(obj)/isoimage
 	mkdir $(obj)/isoimage
 	for i in lib lib64 share end ; do \
+		if [ -f /usr/$$i/syslinux/modules/bios/ldlinux.c32 ] ; then \
+			cp /usr/$$i/syslinux/modules/bios/ldlinux.c32 $(obj)/isoimage ; \
+		fi; \
 		if [ -f /usr/$$i/syslinux/isolinux.bin ] ; then \
 			cp /usr/$$i/syslinux/isolinux.bin $(obj)/isoimage ; \
+			break ; \
+		fi ; \
+		if [ -f /usr/$$i/ISOLINUX/isolinux.bin ] ; then \
+			cp /usr/$$i/ISOLINUX/isolinux.bin $(obj)/isoimage ; \
 			break ; \
 		fi ; \
 		if [ $$i = end ] ; then exit 1 ; fi ; \
@@ -169,7 +176,8 @@ isoimage: $(obj)/bzImage
 	if [ -f '$(FDINITRD)' ] ; then \
 		cp '$(FDINITRD)' $(obj)/isoimage/initrd.img ; \
 	fi
-	mkisofs -J -r -o $(obj)/image.iso -b isolinux.bin -c boot.cat \
+	$$(which mkisofs || which xorrisofs) -J -r \
+		-o $(obj)/image.iso -b isolinux.bin -c boot.cat \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
 		$(obj)/isoimage
 	isohybrid $(obj)/image.iso 2>/dev/null || true
