@@ -1,0 +1,8 @@
+menu "Operating System"
+
+config GRUB_MODULES_PATH
+	string "GRUB modules path"
+	help
+	  This is the absolute path where the GRUB modules live.
+
+endmenu # "Operating System"
