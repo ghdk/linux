@@ -495,3 +495,5 @@ zh_CN/
 	- directory with Chinese translations of various documents
 zorro.txt
 	- info on writing drivers for Zorro bus devices found on Amigas.
+sphinx
+	- Operating System documentation
