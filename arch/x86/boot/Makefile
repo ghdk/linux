@@ -160,10 +160,10 @@ isoimage: $(obj)/bzImage
 	cp $(obj)/bzImage $(obj)/isoimage/boot
 	for i in $(CONFIG_GRUB_MODULES_PATH) /usr/lib/grub/* end ; do \
 		if [ -d "$$i" ] ; then \
-				grub-mkrescue -d $$i -o image.iso $(obj)/isoimage ; \
+			grub-mkrescue -d $$i -o image.iso $(obj)/isoimage ; \
 			break ; \
 		fi ; \
-		if [ $$i = end ] ; then exit 1 ; fi ; \
+		if [ $$i=end ] ; then exit 1 ; fi ; \
 	done
 	isohybrid $(obj)/image.iso 2>/dev/null || true
 	rm -rf $(obj)/isoimage
