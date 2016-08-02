@@ -192,6 +192,82 @@ the modules:
    ./grub2/lib/grub/i386-pc
    ./grub2/bin/grub-mkrescue
 
+Building Linux
+==============
+Linux uses the kbuild framework. We can obtain the list of targets by running
+
+.. code-block:: console
+   :linenos:
+
+   # make help
+
+We can specify a build directory in the following fashion
+
+.. code-block:: console
+   :linenos:
+
+   # make O=_build tinyconfig
+
+In this example the build directory is '_build' and I made the tinyconfig
+target, which configures the tiniest possible kernel. For the x86 architecture
+I usually make the isoimage target which creates a bootable iso. The original
+isoimage target uses the
+`isolinux <http://www.syslinux.org/wiki/index.php?title=ISOLINUX>`_ boot loader.
+I replaced isolinux with GRUB, as GRUB is the bootloader that most probably the
+reader is familiar with. GRUB provides the command grub-mkrescue which
+builds an ISO image:
+
+.. code-block:: console
+   :linenos:
+
+   # grub-mkrescue -d ./grub2/lib/grub/i386-pc -o live.iso isoimage
+
+This command is given the directory where the GRUB modules live. We can set
+this by running make menuconfig and navigating into Operating System > GRUB
+modules path. When I ran this command for the first time, I got an error message
+that it could not locate xorriso
+
+.. code-block:: console
+   :linenos:
+
+   grub-mkrescue: 323: xorriso: not found
+
+so i had to install the xorriso library. Then xorriso complained that it
+could not find the efi.img file
+
+.. code-block:: console
+   :linenos:
+
+   xorriso : FAILURE : Cannot find path '/efi.img' in loaded ISO image
+
+so I had to install the mtools package.
+
+The last argument to this command is a directory that will be included in the
+ISO. GRUB expects a specific structure
+
+.. code-block:: console
+   :linenos:
+
+   # find isoimage
+   isoimage/
+   isoimage/boot
+   isoimage/boot/grub
+   isoimage/boot/grub/grub.cfg
+   isoimage/boot/bzImage
+
+Our kernel is the file bzImage. The GRUB configuration file contains
+
+.. code-block:: console
+   :linenos:
+
+   # cat isoimage/boot/grub/grub.cfg
+   menuentry "Linux" {
+      linux /boot/bzImage
+      boot
+   }
+
+Make sure the open brace is at the same line as the menuentry definition.
+
 Debugging with a VM
 ===================
 During development I will be using a virtual machine for debugging. One solution
