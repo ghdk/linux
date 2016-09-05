@@ -67,8 +67,12 @@ For more information please see the source of the
 Linux
 -----
 This is the method of loading a Linux kernel. The first argument to the linux
-command is the kernel to load, and and subsequent arguments are passed as
-arguments to the kernel.
+command is the kernel to load, and any subsequent arguments are passed as
+arguments to the kernel. The command adheres to the version 2.10 of the Linux
+`boot protocol <https://github.com/torvalds/linux/blob/master/Documentation/x86/boot.txt>`_.
+The Linux boot protocol describes the memory layout for BIOS, loader and the
+kernel. It also describes the header that is used to communicate information
+between the kernel and the loader.
 
 Multiboot
 ---------
