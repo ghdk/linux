@@ -1,0 +1,7 @@
+menu "Operating System"
+
+config OS_HELLO_WORLD
+	bool "Hello world"
+	help
+	  FIXDIO: Module description
+endmenu # "Operating System"
