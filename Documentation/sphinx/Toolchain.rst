@@ -162,7 +162,7 @@ environmental variables and repeated the previous steps
 
 Building GRUB
 =============
-Instructions for dowloading GRUB can be found on the GRUB 2
+Instructions for downloading GRUB can be found on the GRUB 2
 `website <https://www.gnu.org/software/grub/grub-download.html>`_. I cloned
 the GRUB repository:
 
@@ -206,12 +206,34 @@ We can specify a build directory in the following fashion
 .. code-block:: console
    :linenos:
 
-   # make O=_build tinyconfig
+   # make O=_build ARCH="x86" tinyconfig
 
 In this example the build directory is '_build' and I made the tinyconfig
-target, which configures the tiniest possible kernel. For the x86 architecture
-I usually make the isoimage target which creates a bootable iso. The original
-isoimage target uses the
+target, which configures the tiniest possible kernel. An alternative method of
+configuring the kernel easily would be to use the default configuration
+
+.. code-block:: console
+   :linenos:
+
+   # make O=_build ARCH="x86" defconfig
+
+Having a minimal or default configuration we can run menuconfig to
+tweak it
+
+.. code-block:: console
+   :linenos:
+
+   # make O=_build ARCH="x86" menuconfig
+
+Once we are happy with the configuration, we can build the kernel. For the x86
+architecture I usually make the isoimage target which creates a bootable iso
+
+.. code-block:: console
+   :linenos:
+
+   # make O=_build -j2 isoimage
+
+The original isoimage target uses the
 `isolinux <http://www.syslinux.org/wiki/index.php?title=ISOLINUX>`_ boot loader.
 I replaced isolinux with GRUB, as GRUB is the bootloader that most probably the
 reader is familiar with. GRUB provides the command grub-mkrescue which
@@ -223,9 +245,9 @@ builds an ISO image:
    # grub-mkrescue -d ./grub2/lib/grub/i386-pc -o live.iso isoimage
 
 This command is given the directory where the GRUB modules live. We can set
-this by running make menuconfig and navigating into Operating System > GRUB
-modules path. When I ran this command for the first time, I got an error message
-that it could not locate xorriso
+this by running make menuconfig as shown above, and navigating into
+Operating System > "GRUB modules path". When I ran grub-mkrescue for the first
+time, I got an error message that it could not locate xorriso
 
 .. code-block:: console
    :linenos:
@@ -255,7 +277,7 @@ ISO. GRUB expects a specific structure
    isoimage/boot/grub/grub.cfg
    isoimage/boot/bzImage
 
-Our kernel is the file bzImage. The GRUB configuration file contains
+Our kernel is the file "bzImage". The GRUB configuration file contains
 
 .. code-block:: console
    :linenos:
@@ -267,6 +289,12 @@ Our kernel is the file bzImage. The GRUB configuration file contains
    }
 
 Make sure the open brace is at the same line as the menuentry definition.
+
+As part of this project we are customising the Linux build system so that it
+can build our additions. Previously we mentioned the menu
+Operating System > "GRUB modules path" where we can declare the path where the
+GRUB modules live. The menu Device Drivers > Operating System lists the modules
+that we have added and that we can compile as part of Linux.
 
 Debugging with a VM
 ===================
