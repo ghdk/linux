@@ -1,7 +1,7 @@
 menu "Operating System"
 
-config OS_HELLO_WORLD
-	bool "Hello world"
+config OS_MODULE_P_C
+	bool "Poke the Module API"
 	help
 	  FIXDIO: Module description
 endmenu # "Operating System"
