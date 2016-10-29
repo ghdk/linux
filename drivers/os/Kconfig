@@ -1,7 +1,8 @@
 menu "Operating System"
 
 config OS_MODULE_P_C
-	bool "Poke the Module API"
+	tristate "Poke the Module API"
+	default n
 	help
 	  FIXDIO: Module description
 endmenu # "Operating System"
