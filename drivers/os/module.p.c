@@ -28,5 +28,3 @@ static void __exit mod_exit(void)
 }
 
 module_exit(mod_exit);
-
-// eof
