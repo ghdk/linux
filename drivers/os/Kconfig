@@ -1,6 +1,6 @@
 menu "Operating System"
 
-config OS_MODULE_P_C
+config OS_MODAPI_C
 	tristate "Poke the Module API"
 	default n
 	help

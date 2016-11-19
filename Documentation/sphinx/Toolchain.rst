@@ -296,6 +296,50 @@ Operating System > "GRUB modules path" where we can declare the path where the
 GRUB modules live. The menu Device Drivers > Operating System lists the modules
 that we have added and that we can compile as part of Linux.
 
+Building Linux modules
+======================
+A good starting point for module development is
+`The Linux Kernel Module Programming Guide <http://www.tldp.org/LDP/lkmpg/2.6/html/lkmpg.html>`_.
+An example module is drivers/os/module.p.c, whose contents are not particularly
+interesting. However, it can serve as an example of how a module can be
+compiled.
+
+We can run make menuconfig, go to Device Drivers > Operating System and set the
+"Poke the Module API" to "M". "M" means that the module will be built for
+dynamic loading, while "*" means that the module will be statically linked
+against our kernel. Having done so, we can compile all activated modules,
+against our source tree with the command:
+
+.. code-block:: console
+   :linenos:
+
+   make O=_build ARCH="x86" -j4 modules
+
+The following command does all the above, plus it compiles our module against
+the sources of an installed kernel:
+
+.. code-block:: console
+   :linenos:
+
+   make -C /lib/modules/3.16.0-4-586/build M=${PWD}/drivers/os CONFIG_OS_MODAPI_C=m modules
+
+Having compiled our module we can copy it to a VM running the corresponding
+kernel and try it out:
+
+.. code-block:: console
+   :linenos:
+
+   # mkdir -p /lib/modules/3.16.0-4-586/extra
+   # mv /tmp/modapi.ko /lib/modules/3.16.0-4-586/extra/
+   # depmod /lib/modules/3.16.0-4-586/extra/modapi.ko
+   # modprobe modapi
+   # lsmod |grep modapi
+   modapi                 12386  0
+   # modprobe -r modapi
+   # tail -n 2 /var/log/messages
+   Nov 19 17:42:26 vbdeb kernel: [ 2198.076194] modapi.c: 28: mod_init
+   Nov 19 17:42:40 vbdeb kernel: [ 2211.619753] modapi.c: 36: mod_exit
+
 Debugging with a VM
 ===================
 During development I will be using a virtual machine for debugging. One solution
