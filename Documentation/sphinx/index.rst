@@ -31,6 +31,7 @@ Operating System
    Toolchain
    ProgramLoading
    Boot
+   KernelModule
    DescriptorTables
 
 .. eof

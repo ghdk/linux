@@ -298,11 +298,9 @@ that we have added and that we can compile as part of Linux.
 
 Building Linux modules
 ======================
-A good starting point for module development is
-`The Linux Kernel Module Programming Guide <http://www.tldp.org/LDP/lkmpg/2.6/html/lkmpg.html>`_.
 An example module is drivers/os/module.p.c, whose contents are not particularly
-interesting. However, it can serve as an example of how a module can be
-compiled.
+interesting at this point. However, it can serve as an example of how a module
+can be compiled.
 
 We can run make menuconfig, go to Device Drivers > Operating System and set the
 "Poke the Module API" to "M". "M" means that the module will be built for
