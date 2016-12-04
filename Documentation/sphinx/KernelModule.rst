@@ -10,13 +10,31 @@
 Kernel Modules
 ==============
 
-Module API
-==========
+Introduction
+============
 A good starting point for module development is
-`The Linux Kernel Module Programming Guide <http://www.tldp.org/LDP/lkmpg/2.6/html/lkmpg.html>`_.
+`Linux Device Drivers, Third Edition <https://lwn.net/Kernel/LDD3/>`_. As an
+example we will add the following module to the kernel source tree:
 
-Adding a module to the build system
-===================================
+.. code-block:: console
+   :linenos:
+
+   ? find ./drivers/os/
+   ./drivers/os/
+   ./drivers/os/Kconfig
+   ./drivers/os/modapi.c
+   ./drivers/os/Makefile
+
+modapi.c
+========
+The file modapi.c holds the source code of the module:
+
+.. literalinclude:: ../../drivers/os/modapi.c
+   :language: c
+   :linenos:
+
+Kconfig and Makefile
+====================
 Adding a new module to the build system is fairly simple. Let us take for
 example the module
 
@@ -71,7 +89,6 @@ directory we need to source the new Kconfig:
    source "drivers/os/Kconfig"
 
    endmenu
-
 
 Within the "os" directory we introduce a new config file, which allows us to
 set the value of the variable CONFIG_OS_MODAPI_C. Since we are introducing a
