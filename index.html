@@ -235,7 +235,7 @@ environmental variables and repeated the previous steps</p>
 </div>
 <div class="section" id="building-grub">
 <h3>Building GRUB<a class="headerlink" href="#building-grub" title="Permalink to this headline">¶</a></h3>
-<p>Instructions for dowloading GRUB can be found on the GRUB 2
+<p>Instructions for downloading GRUB can be found on the GRUB 2
 <a class="reference external" href="https://www.gnu.org/software/grub/grub-download.html">website</a>. I cloned
 the GRUB repository:</p>
 <div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> git clone git://git.savannah.gnu.org/grub.git
@@ -258,6 +258,129 @@ the modules:</p>
 3</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> find ./grub2 -iwholename <span class="s1">&#39;*mkrescue&#39;</span> -o -iwholename <span class="s1">&#39;*lib/grub/*&#39;</span> -prune
 <span class="go">./grub2/lib/grub/i386-pc</span>
 <span class="go">./grub2/bin/grub-mkrescue</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="building-linux">
+<h3>Building Linux<a class="headerlink" href="#building-linux" title="Permalink to this headline">¶</a></h3>
+<p>Linux uses the kbuild framework. We can obtain the list of targets by running</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> make <span class="nb">help</span>
+</pre></div>
+</td></tr></table></div>
+<p>We can specify a build directory in the following fashion</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> make <span class="nv">O</span><span class="o">=</span>_build <span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;x86&quot;</span> tinyconfig
+</pre></div>
+</td></tr></table></div>
+<p>In this example the build directory is &#8216;_build&#8217; and I made the tinyconfig
+target, which configures the tiniest possible kernel. An alternative method of
+configuring the kernel easily would be to use the default configuration</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> make <span class="nv">O</span><span class="o">=</span>_build <span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;x86&quot;</span> defconfig
+</pre></div>
+</td></tr></table></div>
+<p>Having a minimal or default configuration we can run menuconfig to
+tweak it</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> make <span class="nv">O</span><span class="o">=</span>_build <span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;x86&quot;</span> menuconfig
+</pre></div>
+</td></tr></table></div>
+<p>Once we are happy with the configuration, we can build the kernel. For the x86
+architecture I usually make the isoimage target which creates a bootable iso</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> make <span class="nv">O</span><span class="o">=</span>_build -j2 isoimage
+</pre></div>
+</td></tr></table></div>
+<p>The original isoimage target uses the
+<a class="reference external" href="http://www.syslinux.org/wiki/index.php?title=ISOLINUX">isolinux</a> boot loader.
+I replaced isolinux with GRUB, as GRUB is the bootloader that most probably the
+reader is familiar with. GRUB provides the command grub-mkrescue which
+builds an ISO image:</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> grub-mkrescue -d ./grub2/lib/grub/i386-pc -o live.iso isoimage
+</pre></div>
+</td></tr></table></div>
+<p>This command is given the directory where the GRUB modules live. We can set
+this by running make menuconfig as shown above, and navigating into
+Operating System &gt; &#8220;GRUB modules path&#8221;. When I ran grub-mkrescue for the first
+time, I got an error message that it could not locate xorriso</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="go">grub-mkrescue: 323: xorriso: not found</span>
+</pre></div>
+</td></tr></table></div>
+<p>so i had to install the xorriso library. Then xorriso complained that it
+could not find the efi.img file</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="go">xorriso : FAILURE : Cannot find path &#39;/efi.img&#39; in loaded ISO image</span>
+</pre></div>
+</td></tr></table></div>
+<p>so I had to install the mtools package.</p>
+<p>The last argument to this command is a directory that will be included in the
+ISO. GRUB expects a specific structure</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> find isoimage
+<span class="go">isoimage/</span>
+<span class="go">isoimage/boot</span>
+<span class="go">isoimage/boot/grub</span>
+<span class="go">isoimage/boot/grub/grub.cfg</span>
+<span class="go">isoimage/boot/bzImage</span>
+</pre></div>
+</td></tr></table></div>
+<p>Our kernel is the file &#8220;bzImage&#8221;. The GRUB configuration file contains</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> cat isoimage/boot/grub/grub.cfg
+<span class="go">menuentry &quot;Linux&quot; {</span>
+<span class="go">   linux /boot/bzImage</span>
+<span class="go">   boot</span>
+<span class="go">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>Make sure the open brace is at the same line as the menuentry definition.</p>
+<p>As part of this project we are customising the Linux build system so that it
+can build our additions. Previously we mentioned the menu
+Operating System &gt; &#8220;GRUB modules path&#8221; where we can declare the path where the
+GRUB modules live. The menu Device Drivers &gt; Operating System lists the modules
+that we have added and that we can compile as part of Linux.</p>
+</div>
+<div class="section" id="building-linux-modules">
+<h3>Building Linux modules<a class="headerlink" href="#building-linux-modules" title="Permalink to this headline">¶</a></h3>
+<p>An example module is drivers/os/modapi.c, whose contents are not particularly
+interesting at this point. However, it can serve as an example of how a module
+can be compiled.</p>
+<p>We can run make menuconfig, go to Device Drivers &gt; Operating System and set the
+&#8220;Poke the Module API&#8221; to &#8220;M&#8221;. &#8220;M&#8221; means that the module will be built for
+dynamic loading, while &#8220;*&#8221; means that the module will be statically linked
+against our kernel. Having done so, we can compile all activated modules,
+against our source tree with the command:</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="go">make O=_build ARCH=&quot;x86&quot; -j4 modules</span>
+</pre></div>
+</td></tr></table></div>
+<p>The following command does all the above, plus it compiles our module against
+the sources of an installed kernel:</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="go">make -C /lib/modules/3.16.0-4-586/build M=${PWD}/drivers/os CONFIG_OS_MODAPI_C=m modules</span>
+</pre></div>
+</td></tr></table></div>
+<p>Having compiled our module we can copy it to a VM running the corresponding
+kernel and try it out:</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> mkdir -p /lib/modules/3.16.0-4-586/extra
+<span class="gp">#</span> mv /tmp/modapi.ko /lib/modules/3.16.0-4-586/extra/
+<span class="gp">#</span> depmod /lib/modules/3.16.0-4-586/extra/modapi.ko
+<span class="gp">#</span> modprobe modapi
+<span class="gp">#</span> lsmod <span class="p">|</span>grep modapi
+<span class="go">modapi                 12386  0</span>
+<span class="gp">#</span> modprobe -r modapi
+<span class="gp">#</span> tail -n <span class="m">2</span> /var/log/messages
+<span class="go">Nov 19 17:42:26 vbdeb kernel: [ 2198.076194] modapi.c: 28: mod_init</span>
+<span class="go">Nov 19 17:42:40 vbdeb kernel: [ 2211.619753] modapi.c: 36: mod_exit</span>
 </pre></div>
 </td></tr></table></div>
 </div>
@@ -1851,8 +1974,12 @@ For more information please see the source of the
 <div class="section" id="linux">
 <h4>Linux<a class="headerlink" href="#linux" title="Permalink to this headline">¶</a></h4>
 <p>This is the method of loading a Linux kernel. The first argument to the linux
-command is the kernel to load, and and subsequent arguments are passed as
-arguments to the kernel.</p>
+command is the kernel to load, and any subsequent arguments are passed as
+arguments to the kernel. The command adheres to the version 2.10 of the Linux
+<a class="reference external" href="https://github.com/torvalds/linux/blob/master/Documentation/x86/boot.txt">boot protocol</a>.
+The Linux boot protocol describes the memory layout for BIOS, loader and the
+kernel. It also describes the header that is used to communicate information
+between the kernel and the loader.</p>
 </div>
 <div class="section" id="multiboot">
 <h4>Multiboot<a class="headerlink" href="#multiboot" title="Permalink to this headline">¶</a></h4>
@@ -2078,57 +2205,203 @@ SECTIONS
 </td></tr></table></div>
 </div>
 </div>
-<div class="section" id="bootable-iso">
-<h3>Bootable ISO<a class="headerlink" href="#bootable-iso" title="Permalink to this headline">¶</a></h3>
-<p>In order to boot our VM, we need a bootable device. Making a bootable ISO is the
-easiest method and it does not require root privileges. The
-tool we will be using to make the ISO images is grub-mkrescue</p>
-<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> ./grub2/bin/grub-mkrescue -d ./grub2/lib/grub/i386-pc -o live.iso iso
+</div>
+<span id="document-KernelModule"></span><div class="section" id="kernel-modules">
+<h2>Kernel Modules<a class="headerlink" href="#kernel-modules" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="introduction">
+<h3>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h3>
+<p>A good starting point for module development is
+<a class="reference external" href="https://lwn.net/Kernel/LDD3/">Linux Device Drivers, Third Edition</a>. As an
+example we will add the following module to the kernel source tree:</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> find ./drivers/os/
+<span class="go">./drivers/os/</span>
+<span class="go">./drivers/os/Kconfig</span>
+<span class="go">./drivers/os/modapi.c</span>
+<span class="go">./drivers/os/Makefile</span>
 </pre></div>
 </td></tr></table></div>
-<p>When I used this tool, I got an error message that it could not locate xorriso</p>
-<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="go">grub-mkrescue: 323: xorriso: not found</span>
+</div>
+<div class="section" id="modapi-c">
+<h3>modapi.c<a class="headerlink" href="#modapi-c" title="Permalink to this headline">¶</a></h3>
+<p>The file modapi.c holds the source code of the module:</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Copyright (C) 2016 Dionysios Kalofonos</span>
+<span class="cm"> *</span>
+<span class="cm"> * This program is free software; you can redistribute it and/or modify</span>
+<span class="cm"> * it under the terms of the GNU General Public License version 2 as</span>
+<span class="cm"> * published by the Free Software Foundation.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include &lt;linux/init.h&gt;         </span><span class="c1">// __init, __exit, module_init, and module_exit</span>
+<span class="cp">#include &lt;linux/kernel.h&gt;       </span><span class="c1">// several utilities, includes printk</span>
+<span class="cp">#include &lt;linux/module.h&gt;       </span><span class="c1">// MODULE_LICENSE, MODULE_AUTHOR, MODULE_DESCRIPTION</span>
+<span class="cp">#include &lt;linux/export.h&gt;       </span><span class="c1">// THIS_MODULE</span>
+
+<span class="c1">// module information</span>
+<span class="cp">#define MODULE_NAME &quot;modapi&quot;</span>
+<span class="n">MODULE_LICENSE</span><span class="p">(</span><span class="s">&quot;GPL&quot;</span><span class="p">);</span>
+<span class="n">MODULE_AUTHOR</span><span class="p">(</span><span class="s">&quot;Dionysios Kalofonos&quot;</span><span class="p">);</span>
+<span class="n">MODULE_DESCRIPTION</span><span class="p">(</span><span class="s">&quot;Poke the Module API&quot;</span><span class="p">);</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * Callback for module loading. __init is an attribute meaning that the</span>
+<span class="cm"> * memory used by this function can be thrown away after initialisation.</span>
+<span class="cm"> */</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="n">__init</span> <span class="nf">mod_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">printk</span><span class="p">(</span><span class="n">KERN_INFO</span> <span class="n">MODULE_NAME</span> <span class="s">&quot;: %d: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">__LINE__</span><span class="p">,</span> <span class="n">__func__</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * Callback for module unloading. __exit is an attribute meaning that the</span>
+<span class="cm"> * function can be ignored when compiling for statically linking.</span>
+<span class="cm"> */</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="n">__exit</span> <span class="nf">mod_exit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">printk</span><span class="p">(</span><span class="n">KERN_INFO</span> <span class="n">MODULE_NAME</span> <span class="s">&quot;: %d: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">__LINE__</span><span class="p">,</span> <span class="n">__func__</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// export module functions</span>
+<span class="n">module_init</span><span class="p">(</span><span class="n">mod_init</span><span class="p">);</span>
+<span class="n">module_exit</span><span class="p">(</span><span class="n">mod_exit</span><span class="p">);</span>
 </pre></div>
 </td></tr></table></div>
-<p>so i had to install the xorriso library. Then xorriso complained that it
-could not find the efi.img file</p>
-<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="go">xorriso : FAILURE : Cannot find path &#39;/efi.img&#39; in loaded ISO image</span>
+</div>
+<div class="section" id="kconfig-and-makefile">
+<h3>Kconfig and Makefile<a class="headerlink" href="#kconfig-and-makefile" title="Permalink to this headline">¶</a></h3>
+<p>With this module we are adding to the drivers directory the sub-directory named
+&#8220;os&#8221;, and the module modapi.c. In order for the new directory to be considered
+during building, we need to append an obj target to the Makefile of the
+parent directory:</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> tail drivers/Makefile
+<span class="go">obj-$(CONFIG_IPACK_BUS)         += ipack/</span>
+<span class="go">obj-$(CONFIG_NTB)               += ntb/</span>
+<span class="go">obj-$(CONFIG_FMC)               += fmc/</span>
+<span class="go">obj-$(CONFIG_POWERCAP)          += powercap/</span>
+<span class="go">obj-$(CONFIG_MCB)               += mcb/</span>
+<span class="go">obj-$(CONFIG_RAS)               += ras/</span>
+<span class="go">obj-$(CONFIG_THUNDERBOLT)       += thunderbolt/</span>
+<span class="go">obj-$(CONFIG_CORESIGHT)         += coresight/</span>
+<span class="go">obj-$(CONFIG_ANDROID)           += android/</span>
+<span class="go">obj-$(CONFIG_OS_MODAPI_C)       += os/</span>
 </pre></div>
 </td></tr></table></div>
-<p>so I had to install the mtools package.</p>
-<p>The last argument of this command is a directory that will be included in the
-ISO. GRUB expects a specific structure</p>
+<p>Within the directory &#8220;os&#8221; we need a makefile, which lists the files that we
+need to build for the new obj target:</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> cat drivers/os/Makefile
+<span class="gp">#</span> MODAPI module
+
+<span class="go">obj-$(CONFIG_OS_MODAPI_C)               += modapi.o</span>
+</pre></div>
+</td></tr></table></div>
+<p>Equivalently, we need to setup the config files. In the Kconfig of the parent
+directory we need to source the new Kconfig:</p>
+<div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> tail drivers/Kconfig
+
+<span class="go">source &quot;drivers/ras/Kconfig&quot;</span>
+
+<span class="go">source &quot;drivers/thunderbolt/Kconfig&quot;</span>
+
+<span class="go">source &quot;drivers/android/Kconfig&quot;</span>
+
+<span class="go">source &quot;drivers/os/Kconfig&quot;</span>
+
+<span class="go">endmenu</span>
+</pre></div>
+</td></tr></table></div>
+<p>Within the &#8220;os&#8221; directory we introduce a new config file, which allows us to
+set the value of the variable CONFIG_OS_MODAPI_C. Since we are introducing a
+new directory, in our Kconfig we also add a menu entry:</p>
 <div class="highlight-console"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
 5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> find iso
-<span class="go">iso</span>
-<span class="go">iso/boot</span>
-<span class="go">iso/boot/grub</span>
-<span class="go">iso/boot/grub/grub.cfg</span>
-<span class="go">iso/boot/a.out</span>
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="gp">#</span> cat drivers/os/Kconfig
+<span class="go">menu &quot;Operating System&quot;</span>
+
+<span class="go">config OS_MODAPI_C</span>
+<span class="go">   tristate &quot;Poke the Module API&quot;</span>
+<span class="go">   default n</span>
+<span class="go">   help</span>
+<span class="go">      A minimal module showcasing the module API.</span>
+<span class="go">endmenu # &quot;Operating System&quot;</span>
 </pre></div>
 </td></tr></table></div>
-<p>Our kernel is the file a.out. The GRUB configuration file contains</p>
-<div class="highlight-bash"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3</pre></div></td><td class="code"><div class="highlight"><pre>menuentry <span class="s2">&quot;OS&quot;</span> <span class="o">{</span>
-   multiboot /boot/a.out
-<span class="o">}</span>
-</pre></div>
-</td></tr></table></div>
-<p>Make sure the open brace is at the same line as the menuentry definition. If
-you want to boot with the Multiboot 2 header instead, use the multiboot2
-command:</p>
-<div class="highlight-bash"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3</pre></div></td><td class="code"><div class="highlight"><pre>menuentry <span class="s2">&quot;OS&quot;</span> <span class="o">{</span>
-   multiboot2 /boot/a.out
-<span class="o">}</span>
-</pre></div>
-</td></tr></table></div>
+<p>We set the type of the variable to tristate as this variable can be set to one
+of &#8216;n&#8217; for not building the module, &#8216;M&#8217; for building the module for dynamic
+loading, and &#8216;*&#8217; for statically linking the module.</p>
 </div>
 </div>
 <span id="document-DescriptorTables"></span><div class="section" id="descriptor-tables">
@@ -2152,6 +2425,8 @@ command:</p>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-Toolchain">Toolchain</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="index.html#building-a-cross-compiler">Building a cross-compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#building-grub">Building GRUB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#building-linux">Building Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#building-linux-modules">Building Linux modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#debugging-with-a-vm">Debugging with a VM</a></li>
 </ul>
 </li>
@@ -2164,7 +2439,12 @@ command:</p>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-Boot">Boot Process</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="index.html#background">Background</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#grub-multiboot">GRUB - Multiboot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#bootable-iso">Bootable ISO</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-KernelModule">Kernel Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="index.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#modapi-c">modapi.c</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#kconfig-and-makefile">Kconfig and Makefile</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-DescriptorTables">Descriptor Tables</a><ul>
