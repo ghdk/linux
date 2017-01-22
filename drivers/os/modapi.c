@@ -9,34 +9,33 @@
 #include <linux/init.h>         // __init, __exit, module_init, and module_exit
 #include <linux/kernel.h>       // several utilities, includes printk
 #include <linux/module.h>       // MODULE_LICENSE, MODULE_AUTHOR, MODULE_DESCRIPTION
-#include <linux/moduleparam.h>  // module_param
-#include <linux/fs.h>           // struct file_operators
 #include <linux/export.h>       // THIS_MODULE
 
+// module information
 #define MODULE_NAME "modapi"
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Dionysios Kalofonos");
 MODULE_DESCRIPTION("Poke the Module API");
 
-char *device = "modapi";
-module_param(device, charp, 0);
-
-struct file_operations fops = {
-    .owner = THIS_MODULE
-};
-
+/*
+ * Callback for module loading. __init is an attribute meaning that the
+ * memory used by this function can be thrown away after initialisation.
+ */
 static int __init mod_init(void)
 {
     printk(KERN_INFO MODULE_NAME ": %d: %s\n", __LINE__, __func__);
-    printk(KERN_INFO MODULE_NAME ": using device: %s\n", device);
     return 0;
 }
 
-module_init(mod_init);
-
+/*
+ * Callback for module unloading. __exit is an attribute meaning that the
+ * function can be ignored when compiling for statically linking.
+ */
 static void __exit mod_exit(void)
 {
     printk(KERN_INFO MODULE_NAME ": %d: %s\n", __LINE__, __func__);
 }
 
+// export module functions
+module_init(mod_init);
 module_exit(mod_exit);

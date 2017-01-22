@@ -4,5 +4,5 @@ config OS_MODAPI_C
 	tristate "Poke the Module API"
 	default n
 	help
-	  FIXDIO: Module description
+	  A minimal module showcasing the module API.
 endmenu # "Operating System"

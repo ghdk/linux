@@ -298,7 +298,7 @@ that we have added and that we can compile as part of Linux.
 
 Building Linux modules
 ======================
-An example module is drivers/os/module.p.c, whose contents are not particularly
+An example module is drivers/os/modapi.c, whose contents are not particularly
 interesting at this point. However, it can serve as an example of how a module
 can be compiled.
 

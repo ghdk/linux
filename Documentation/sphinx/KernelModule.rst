@@ -19,7 +19,7 @@ example we will add the following module to the kernel source tree:
 .. code-block:: console
    :linenos:
 
-   ? find ./drivers/os/
+   # find ./drivers/os/
    ./drivers/os/
    ./drivers/os/Kconfig
    ./drivers/os/modapi.c
@@ -35,14 +35,6 @@ The file modapi.c holds the source code of the module:
 
 Kconfig and Makefile
 ====================
-Adding a new module to the build system is fairly simple. Let us take for
-example the module
-
-.. code-block:: text
-   :linenos:
-
-   drivers/os/modapi.c
-
 With this module we are adding to the drivers directory the sub-directory named
 "os", and the module modapi.c. In order for the new directory to be considered
 during building, we need to append an obj target to the Makefile of the
@@ -70,6 +62,8 @@ need to build for the new obj target:
    :linenos:
 
    # cat drivers/os/Makefile
+   # MODAPI module
+
    obj-$(CONFIG_OS_MODAPI_C)               += modapi.o
 
 Equivalently, we need to setup the config files. In the Kconfig of the parent
@@ -101,8 +95,10 @@ new directory, in our Kconfig we also add a menu entry:
    menu "Operating System"
 
    config OS_MODAPI_C
-           tristate "Poke the Module API"
-           default n
+      tristate "Poke the Module API"
+      default n
+      help
+         A minimal module showcasing the module API.
    endmenu # "Operating System"
 
 We set the type of the variable to tristate as this variable can be set to one
